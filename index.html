@@ -314,24 +314,26 @@
     }
 
     /* ── ABOUT ── */
-    #about { position: relative; overflow: hidden; background: var(--black); }
-    #about .section-label { color: var(--gold); }
-    #about .section-label::before { background: var(--gold); }
-    #about .section-title { color: var(--white); }
+    #about { position: relative; overflow: hidden; background: #fff; }
+    #about .section-label { color: var(--gold-dk); }
+    #about .section-label::before { background: var(--gold-dk); }
+    #about .section-title { color: #080808; }
     #about .section-title em { color: var(--gold); }
-    .about-bg {
-      position: absolute; inset: 0;
-      background: url('brand_assets/helicopter adjusted.png') center/cover no-repeat;
-    }
-    .about-overlay {
-      position: absolute; inset: 0;
-      background: rgba(8,8,8,0.68);
+    .about-watermark {
+      position: absolute;
+      right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 560px; height: auto;
+      opacity: 0.07;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      user-select: none;
     }
     .about-layout {
       position: relative; z-index: 2;
       max-width: 760px;
     }
-    .about-text p { font-size: 15px; line-height: 1.9; color: rgba(245,240,232,0.88); margin-bottom: 16px; }
+    .about-text p { font-size: 15px; line-height: 1.9; color: rgba(8,8,8,0.8); margin-bottom: 16px; }
     .about-stats {
       display: grid; grid-template-columns: 1fr;
       gap: 2px; margin-top: 44px; max-width: 280px;
@@ -927,8 +929,7 @@
 
 <!-- ABOUT -->
 <section id="about">
-  <div class="about-bg"></div>
-  <div class="about-overlay"></div>
+  <img class="about-watermark" src="brand_assets/RAM logo only black.png" alt="" aria-hidden="true" />
   <div class="about-layout">
     <div class="about-text">
       <div class="section-label reveal">Who We Are</div>
