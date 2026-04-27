@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAM Music Services — Australia & New Zealand's Premier Artist Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black:   #080808;
+      --charcoal: #141414;
+      --card:    #1a1a1a;
+      --white:   #f5f0e8;
+      --gold:    #c9a84c;
+      --gold-lt: #e8d08a;
+      --gold-dk: #9a7a30;
+      --muted:   #888;
+      --line:    rgba(201,168,76,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.1s ease;
+    }
+    .cursor-ring {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(201,168,76,0.45);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform 0.28s ease, width 0.2s, height 0.2s;
+    }
+    body:hover .cursor-ring { width: 34px; height: 34px; }
+    a:hover ~ .cursor-ring, button:hover ~ .cursor-ring { width: 48px; height: 48px; }
+
+    /* ── NOISE GRAIN ── */
+    .grain {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9990;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .bebas   { font-family: 'Bebas Neue', sans-serif; }
+    .cg      { font-family: 'Cormorant Garamond', serif; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 52px;
+      background: rgba(8,8,8,0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 8px 52px; }
+    .nav-logo img { height: 128px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(245,240,232,0.82);
+      text-decoration: none;
+      transition: color 0.25s;
+      cursor: none;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      border: 1px solid var(--gold) !important;
+      color: var(--gold) !important;
+      padding: 9px 22px !important;
+      opacity: 1 !important;
+      transition: background 0.25s, color 0.25s !important;
+    }
+    .nav-cta:hover { background: var(--gold) !important; color: var(--black) !important; }
+    .nav-hamburger { display: none; cursor: none; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; background: rgba(8,8,8,0.97);
+      z-index: 490; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 24px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em;
+      color: var(--white); text-decoration: none; transition: color 0.25s; cursor: none;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close {
+      position: absolute; top: 20px; right: 24px;
+      background: none; border: none; color: var(--white);
+      font-size: 28px; cursor: none;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 168px 52px 96px;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 75% at 72% 32%, rgba(201,168,76,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(201,168,76,0.025) 0%, transparent 50%),
+        linear-gradient(165deg, rgba(8,8,8,0.82) 0%, rgba(8,8,8,0.7) 50%, rgba(8,8,8,0.85) 100%),
+        url('brand_assets/sold%20out%20crowd.png') center/cover no-repeat;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.032) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.032) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 1000px;
+    }
+    .hero-eyebrow {
+      font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 500;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 40px; height: 1px;
+      background: var(--gold); flex-shrink: 0;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(68px, 11vw, 164px);
+      line-height: 0.88; letter-spacing: 0.01em;
+      color: var(--white);
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.62em;
+      color: var(--gold); display: block; line-height: 1.05;
+    }
+    .hero-sub {
+      font-size: 17px; line-height: 1.8;
+      color: rgba(245,240,232,0.88);
+      max-width: 560px; margin-bottom: 48px;
+    }
+    .hero-actions {
+      display: flex; gap: 26px; align-items: center;
+    }
+    /* JS adds .hero-animate class to trigger entrance animations */
+    .hero-animate .hero-eyebrow { animation: fadeUp 0.9s 0.15s both; }
+    .hero-animate .hero-title   { animation: fadeUp 0.9s 0.35s both; }
+    .hero-animate .hero-sub     { animation: fadeUp 0.9s 0.55s both; }
+    .hero-animate .hero-actions { animation: fadeUp 0.9s 0.72s both; }
+    .btn-gold {
+      background: var(--gold); color: var(--black);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; padding: 17px 42px;
+      border: none; text-decoration: none; display: inline-block;
+      cursor: none;
+      transition: background 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-gold:hover { background: var(--gold-lt); transform: translateY(-3px); }
+    .btn-ghost {
+      color: rgba(245,240,232,0.84);
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; display: flex; align-items: center; gap: 10px;
+      transition: color 0.25s, gap 0.2s; cursor: none;
+    }
+    .btn-ghost::after { content: '→'; font-size: 16px; }
+    .btn-ghost:hover { color: var(--white); gap: 14px; }
+    .hero-scroll-ind {
+      position: absolute; right: 52px; bottom: 96px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .hero-animate .hero-scroll-ind { animation: fadeIn 1s 1.2s both; }
+    .hero-scroll-ind span {
+      font-size: 8px; letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--muted); writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2.4s ease-in-out infinite;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0; overflow: hidden;
+      background: rgba(201,168,76,0.022);
+    }
+    .marquee-track {
+      display: flex; gap: 52px;
+      animation: marquee 38s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px; letter-spacing: 0.26em;
+      color: var(--gold); opacity: 0.65; flex-shrink: 0;
+    }
+    .marquee-sep { color: var(--gold); opacity: 0.28; flex-shrink: 0; font-size: 11px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 112px 52px; scroll-margin-top: 148px; }
+    .section-label {
+      font-size: 9.5px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(38px, 5.5vw, 86px);
+      line-height: 0.92; letter-spacing: 0.02em;
+      margin-bottom: 20px;
+    }
+    .section-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; color: var(--gold);
+    }
+    .divider {
+      height: 1px; margin: 0 52px;
+      background: linear-gradient(to right, transparent, var(--line) 30%, var(--line) 70%, transparent);
+    }
+
+    /* ── ABOUT ── */
+    #about { background: #fff; }
+    #about .section-label { color: var(--gold-dk); }
+    #about .section-label::before { background: var(--gold-dk); }
+    #about .section-title { color: #080808; }
+    #about .section-title em { color: var(--gold); }
+    .about-layout {
+      display: grid; grid-template-columns: 1fr 1.05fr;
+      gap: 96px; align-items: center;
+    }
+    .about-visual { position: relative; height: 540px; }
+    .about-main-box {
+      position: absolute; inset: 0 0 52px 0;
+      background: none;
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .about-main-box::before { display: none; }
+    .about-logo-display {
+      position: absolute; inset: 0;
+      z-index: 1; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-logo-display img { width: 100%; height: auto; display: block; opacity: 1; filter: none; }
+    .about-quote {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 28px;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 100%);
+    }
+    .about-quote p {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 16px; color: var(--gold-lt); line-height: 1.55;
+    }
+    .about-accent {
+      position: absolute; bottom: 0; right: -24px;
+      width: 156px; height: 78px;
+      background: var(--gold);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+    }
+    .about-accent .num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 32px;
+      color: var(--black); line-height: 1;
+    }
+    .about-accent .lbl {
+      font-size: 8px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(8,8,8,0.6);
+    }
+    .about-text p { font-size: 15px; line-height: 1.9; color: rgba(8,8,8,0.8); margin-bottom: 16px; }
+    .about-stats {
+      display: grid; grid-template-columns: 1fr;
+      gap: 2px; margin-top: 44px; max-width: 280px;
+    }
+    .stat {
+      background: #1a1a1a; padding: 26px 20px;
+      border: 1px solid rgba(201,168,76,0.14);
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 40px;
+      color: var(--gold); line-height: 1;
+    }
+    .stat-label {
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #aaa; margin-top: 4px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--charcoal); }
+    .services-header {
+      margin-bottom: 48px;
+    }
+    .services-header p {
+      font-size: 14px; line-height: 1.75;
+      color: rgba(245,240,232,0.72); margin-top: 12px;
+    }
+    .services-list { display: flex; flex-direction: column; }
+    .service-item {
+      display: grid; grid-template-columns: 280px 1fr;
+      gap: 40px; padding: 28px 0;
+      border-bottom: 1px solid rgba(245,240,232,0.08);
+      align-items: start;
+    }
+    .services-list .service-item:first-child { border-top: 1px solid rgba(245,240,232,0.08); }
+    .service-item-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+      letter-spacing: 0.06em; color: var(--gold-lt);
+      padding-top: 2px; line-height: 1.2;
+    }
+    .service-item-desc {
+      font-size: 14px; line-height: 1.82;
+      color: rgba(245,240,232,0.82);
+    }
+
+    /* ── TRACK RECORD ── */
+    #track { background: #fff; }
+    #track .section-label { color: var(--gold-dk); }
+    #track .section-label::before { background: var(--gold-dk); }
+    #track .section-title { color: #080808; }
+    #track .section-title em { color: var(--gold); }
+    #track .intro { font-size: 15px; line-height: 1.85; color: rgba(8,8,8,0.78); max-width: 700px; margin-bottom: 12px; }
+    #track .note { font-size: 13px; color: var(--gold-dk); font-style: italic; margin-bottom: 40px; }
+    .companies-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    }
+    .company-card {
+      background: #fff; padding: 28px 32px;
+      border: 1px solid rgba(8,8,8,0.08);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s, border-color 0.25s;
+      min-height: 100px;
+    }
+    .company-card:hover { background: #f8f5ef; border-color: rgba(201,168,76,0.4); }
+    .company-card img {
+      max-height: 52px; max-width: 100%; width: auto;
+      object-fit: contain; display: block;
+      transition: opacity 0.3s;
+      opacity: 0.9;
+    }
+    .company-card:hover img { opacity: 1; }
+
+    /* ── DIFFERENT ── */
+    #different { background: var(--black); }
+    .different-grid {
+      display: flex; flex-direction: column;
+      gap: 2px; margin-top: 56px;
+    }
+    .diff-card {
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.09);
+      min-height: 320px;
+      transition: border-color 0.3s;
+    }
+    .diff-card:hover { border-color: rgba(201,168,76,0.3); }
+    .diff-card-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.6s ease;
+    }
+    .diff-card:hover .diff-card-bg { transform: scale(1.04); }
+    .diff-card-overlay {
+      position: absolute; inset: 0;
+      background: rgba(8,8,8,0.62);
+    }
+    .diff-card-content {
+      position: relative; z-index: 2;
+      padding: 52px 56px; max-width: 760px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .diff-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; color: var(--gold-lt); margin-bottom: 14px;
+    }
+    .diff-card-text { font-size: 14.5px; line-height: 1.82; color: rgba(245,240,232,0.9); }
+
+    /* ── PROCESS ── */
+    #process { background: #fff; }
+    #process .section-label { color: var(--gold-dk); }
+    #process .section-label::before { background: var(--gold-dk); }
+    #process .section-title { color: #080808; }
+    #process .section-title em { color: var(--gold); }
+    #process .btn-gold { background: var(--gold); }
+    .process-steps {
+      margin-top: 56px; display: flex; flex-direction: column;
+      max-width: 740px; margin-left: auto; margin-right: auto;
+    }
+    .process-step {
+      display: grid; grid-template-columns: 72px 1fr;
+      gap: 28px; align-items: start;
+      background: none; padding: 30px 0;
+      border: none;
+      border-bottom: 1px solid rgba(8,8,8,0.1);
+    }
+    .process-steps .process-step:first-child { border-top: 1px solid rgba(8,8,8,0.1); }
+    .process-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 48px;
+      color: var(--gold); line-height: 1;
+    }
+    .process-content { padding-top: 4px; }
+    .process-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; color: #080808; margin-bottom: 6px;
+    }
+    .process-desc { font-size: 14px; line-height: 1.78; color: rgba(8,8,8,0.7); }
+
+    /* ── TEAM ── */
+    #team { background: var(--black); }
+    #team .intro { font-size: 15px; line-height: 1.85; color: rgba(245,240,232,0.82); max-width: 640px; margin-top: 4px; }
+    .team-grid {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; align-items: flex-start;
+      gap: 12px; margin-top: 52px;
+      max-width: 820px; margin-left: auto; margin-right: auto;
+    }
+    .team-card-featured {
+      flex-basis: 100%; display: flex; flex-direction: column;
+      align-items: center;
+    }
+    .team-card-featured .team-card-top {
+      width: fit-content;
+    }
+    .team-card {
+      background: var(--charcoal); padding: 28px 24px;
+      border: 1px solid rgba(201,168,76,0.1);
+      position: relative; overflow: hidden; cursor: none;
+      transition: border-color 0.3s;
+      width: 400px; flex-shrink: 0;
+    }
+    .team-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--gold); opacity: 0.38;
+    }
+    .team-card-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .team-card-top {
+      display: flex; gap: 24px; align-items: center;
+    }
+    .team-avatar {
+      width: 130px; height: 164px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), rgba(201,168,76,0.25));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+      color: var(--black); flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid rgba(201,168,76,0.35);
+    }
+    .team-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .team-card-header {
+      flex: 1; min-width: 0; display: flex;
+      justify-content: space-between; align-items: flex-start;
+    }
+    .team-role { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .team-name { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.04em; color: var(--white); line-height: 1.1; }
+    .team-expand-icon { color: var(--gold); font-size: 20px; flex-shrink: 0; transition: transform 0.3s; margin-left: 12px; }
+    .team-bio { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+    .team-bio p { font-size: 13px; line-height: 1.78; color: rgba(245,240,232,0.82); margin-top: 12px; }
+    .team-bio p:first-child { padding-top: 16px; border-top: 1px solid rgba(201,168,76,0.1); margin-top: 20px; }
+    .team-bio p em { font-family: 'DM Sans', sans-serif; font-style: italic; color: var(--gold-lt); }
+    .team-card.expanded .team-bio { max-height: 600px; }
+    .team-card.expanded .team-expand-icon { transform: rotate(45deg); }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { background: #fff; }
+    .testi-carousel-wrap { overflow: hidden; }
+    .testi-carousel-track {
+      display: flex; gap: 24px; padding: 0 52px;
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+    }
+    .testi-card {
+      flex-shrink: 0; width: calc(50% - 64px);
+      background: #fff; padding: 48px 40px;
+      border: 1px solid rgba(8,8,8,0.1);
+      position: relative; overflow: hidden;
+    }
+    .testi-quote-bg {
+      position: absolute; top: -20px; left: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 220px; line-height: 1;
+      color: rgba(8,8,8,0.04); pointer-events: none;
+      user-select: none;
+    }
+    .testi-text {
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      font-style: normal; line-height: 1.82;
+      color: rgba(8,8,8,0.82); margin-bottom: 28px;
+      position: relative; z-index: 1;
+    }
+    .testi-author { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), rgba(201,168,76,0.25));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 14px;
+      color: var(--black); flex-shrink: 0;
+    }
+    .testi-name { font-weight: 500; font-size: 13.5px; color: #080808; }
+    .testi-role { font-size: 10px; color: var(--gold-dk); letter-spacing: 0.1em; margin-top: 2px; }
+
+    /* ── FAQ ── */
+    #faq { background: var(--black); }
+    .faq-list { margin-top: 52px; display: flex; flex-direction: column; gap: 2px; }
+    .faq-item {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,168,76,0.09);
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 24px 32px; font-size: 15px; font-weight: 400;
+      color: var(--white); cursor: none;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: color 0.25s;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-icon { color: var(--gold); font-size: 22px; transition: transform 0.3s; flex-shrink: 0; margin-left: 16px; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a-inner {
+      padding: 16px 32px 26px;
+      font-size: 14px; line-height: 1.82;
+      color: rgba(245,240,232,0.86);
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--charcoal); }
+    .contact-layout {
+      display: grid; grid-template-columns: 1fr;
+      max-width: 680px;
+    }
+    .contact-info p { font-size: 15px; line-height: 1.85; color: rgba(245,240,232,0.84); margin-bottom: 40px; }
+    .contact-detail { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 22px; }
+    .contact-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border: 1px solid rgba(201,168,76,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .contact-text strong { display: block; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+    .contact-text span { font-size: 13px; color: rgba(245,240,232,0.84); }
+    .contact-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #999; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--white);
+      padding: 13px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.25s;
+      cursor: none;
+    }
+    .form-group select option { background: #1a1a1a; }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--gold); }
+    .form-group textarea { height: 115px; resize: none; }
+    .submit-btn {
+      background: var(--gold); color: var(--black);
+      border: none; padding: 17px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      cursor: none; margin-top: 6px;
+      transition: background 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .submit-btn:hover { background: var(--gold-lt); transform: translateY(-3px); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 44px 52px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--black);
+    }
+    .footer-logo img { height: 38px; width: auto; }
+    .footer-copy { font-size: 10.5px; color: rgba(245,240,232,0.48); letter-spacing: 0.04em; }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a {
+      font-size: 10.5px; letter-spacing: 0.1em;
+      color: rgba(245,240,232,0.56); text-decoration: none;
+      transition: color 0.25s; cursor: none;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── ARTIST LISTS ── */
+    .artist-lists {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 32px; margin-top: 0;
+      max-width: 820px; margin-left: auto; margin-right: auto;
+    }
+    .artist-right-col { display: flex; flex-direction: column; gap: 32px; }
+    .artist-col {
+      background: none; padding: 0;
+      border: none;
+    }
+    .artist-col-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+      letter-spacing: 0.1em; color: var(--gold-dk);
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+    }
+    .artist-list {
+      list-style: none; display: flex; flex-direction: column; gap: 10px;
+    }
+    .artist-list li {
+      font-size: 13.5px; color: rgba(8,8,8,0.78); line-height: 1.4;
+      padding-left: 14px; position: relative;
+    }
+    .artist-list li::before {
+      content: ''; position: absolute; left: 0; top: 7px;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* ── LOGO MARQUEE ── */
+    .logo-marquee-outer { overflow: hidden; width: 100%; }
+    .logo-marquee-track {
+      display: flex; align-items: center; gap: 56px;
+      animation: marquee 42s linear infinite;
+      white-space: nowrap;
+    }
+    .logo-marquee-item { flex-shrink: 0; }
+    .logo-marquee-item img {
+      height: 52px; width: auto; max-width: 160px;
+      object-fit: contain; display: block;
+      opacity: 0.85; transition: opacity 0.25s;
+    }
+    .logo-marquee-item:hover img { opacity: 1; }
+
+    /* ── GALLERY ── */
+    .gallery-track-wrap {
+      overflow: hidden; width: 100%;
+    }
+    .gallery-track {
+      display: flex; gap: 20px;
+      padding: 0 52px;
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+      will-change: transform;
+    }
+    .gallery-item {
+      flex-shrink: 0;
+      height: 360px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .gallery-item img {
+      height: 100%; width: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.02); }
+    .gallery-btn {
+      width: 44px; height: 44px;
+      border: 1px solid rgba(201,168,76,0.35);
+      background: none; color: var(--gold);
+      font-size: 18px; cursor: none;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s, color 0.25s;
+    }
+    .gallery-btn:hover { background: var(--gold); color: var(--black); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.22; transform: scaleY(1); }
+      50%       { opacity: 1; transform: scaleY(1.08); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes marquee-reverse {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(38px);
+      transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.22s; }
+    .reveal-d3 { transition-delay: 0.34s; }
+    .reveal-d4 { transition-delay: 0.46s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .about-layout { grid-template-columns: 1fr; gap: 48px; }
+      .about-visual { height: 300px; }
+      .about-stats { grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width: 960px) {
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+      section { padding: 72px 22px; }
+      .hero { padding: 168px 22px 80px; }
+      .hero-scroll-ind { display: none; }
+      .diff-card-content { padding: 36px 28px; }
+      .team-grid { grid-template-columns: 1fr 1fr; max-width: 100%; }
+      .team-card { width: auto; }
+      .companies-grid { grid-template-columns: repeat(2,1fr); }
+      .contact-layout { grid-template-columns: 1fr; gap: 52px; }
+      .process-step { grid-template-columns: 64px 1fr; gap: 18px; padding: 26px 22px; }
+      footer { flex-direction: column; gap: 18px; text-align: center; }
+      /* Services list mobile */
+      .service-item { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+      .service-item-name { font-size: 19px; }
+      /* Testimonials carousel mobile — 1 card wide */
+      .testi-card { width: calc(100vw - 80px); }
+      .testi-carousel-track { padding: 0 22px; gap: 16px; }
+      /* Artist lists */
+      .artist-lists { grid-template-columns: 1fr; }
+      .artist-right-col { gap: 20px; }
+      /* Diff cards */
+      .diff-card { min-height: 280px; }
+      .different-grid { gap: 2px; }
+      /* About */
+      .about-layout { grid-template-columns: 1fr; gap: 48px; }
+      .about-visual { height: 280px; }
+      /* Gallery */
+      .gallery-item { height: 240px; }
+      /* Team featured */
+      .team-card-featured { width: auto; }
+    }
+    @media (max-width: 600px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .testi-card { width: calc(100vw - 44px); }
+      .testi-carousel-track { padding: 0 22px; }
+      .hero-title { font-size: clamp(52px, 14vw, 100px); }
+      .section-title { font-size: clamp(32px, 9vw, 60px); }
+      .service-item { grid-template-columns: 1fr; }
+      .services-header { flex-direction: column; gap: 12px; }
+      .services-header p { text-align: left; max-width: 100%; }
+      nav { padding: 10px 16px; }
+      .nav-logo img { height: 80px; }
+      .process-steps { max-width: 100%; }
+      .diff-card-content { padding: 28px 22px; }
+      .gallery-item { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- GRAIN OVERLAY -->
+<div class="grain"></div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-close" id="mobile-close" aria-label="Close menu">✕</button>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#track" onclick="closeMobile()">Our Clients</a>
+  <a href="#different" onclick="closeMobile()">Why RAM</a>
+  <a href="#team" onclick="closeMobile()">Team</a>
+  <a href="#gallery" onclick="closeMobile()">Gallery</a>
+  <a href="#faq" onclick="closeMobile()">FAQ</a>
+  <a href="#contact" onclick="closeMobile()" style="color:var(--gold)">Get In Touch</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo" style="cursor:none">
+    <img src="brand_assets/RAM logo landscape black.png" alt="RAM Music Services" style="filter:invert(1)" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#track">Our Clients</a></li>
+    <li><a href="#different">Why RAM</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Australia &amp; New Zealand's Premier Music Artist Services Partner</div>
+    <h1 class="hero-title">Your Tour.<br><em>Flawlessly Delivered.</em></h1>
+    <p class="hero-sub">Complete end-to-end tour management for international artists performing in Australia &amp; New Zealand. We tailor our services to your requirements, from the moment you land to final departure.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-gold">Start Planning Your Tour</a>
+      <a href="#services" class="btn-ghost">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-scroll-ind">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span class="marquee-item">Artist Management</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Tour Management</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">VIP Protection &amp; Tour Security</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Security Driver Operations</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Musicians &amp; Music Directors</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Production</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Press &amp; Promotion</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Hair &amp; Makeup</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Styling &amp; Wardrobe</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Accommodation</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Hospitality</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Air Travel</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Working Rights &amp; Visas</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Photography</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Local Experiences</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Artist Management</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Tour Management</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">VIP Protection &amp; Tour Security</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Security Driver Operations</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Musicians &amp; Music Directors</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Production</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Press &amp; Promotion</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Hair &amp; Makeup</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Styling &amp; Wardrobe</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Accommodation</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Hospitality</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Air Travel</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Working Rights &amp; Visas</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Photography</span><span class="marquee-sep">✦</span>
+    <span class="marquee-item">Local Experiences</span><span class="marquee-sep">✦</span>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-layout">
+    <div class="about-visual reveal">
+      <div class="about-main-box">
+        <div class="about-logo-display">
+          <img src="brand_assets/helicopter.PNG" alt="RAM Music Services" />
+        </div>
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="section-label reveal">Who We Are</div>
+      <h2 class="section-title reveal reveal-d1">Built for <em>Artist Managers, Agents &amp; Record Labels.</em><br><span style="font-size:0.5em;letter-spacing:0.04em">Delivered by Industry Insiders.</span></h2>
+      <p class="reveal reveal-d2">RAM Music Services was founded by a team with extensive experience working alongside internationally renowned artists and actors visiting and working in Australia. We understand the unique demands of touring Australia &amp; New Zealand — not just logistically, but creatively, personally, and professionally.</p>
+      <p class="reveal reveal-d2">We work with record labels, management companies and studios to execute seamless tours across Australia &amp; New Zealand, providing trusted, on-the-ground support that removes risk and reduces complexity.</p>
+      <p class="reveal reveal-d2">Our network spans every discipline required to deliver a tour at scale. From senior tour management, production and security through to elite local musicians, stylists, and VIP transport. Every role filled by professionals who understand live performance environments and operate to international standards.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT MAKES US DIFFERENT -->
+<section id="different">
+  <div class="section-label reveal">Why Choose RAM</div>
+  <h2 class="section-title reveal reveal-d1">What Makes Us <em>Different</em></h2>
+  <div class="different-grid">
+
+    <div class="diff-card reveal" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/budget.png');background-position:center 40%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.65)"></div>
+      <div class="diff-card-content">
+        <div class="diff-card-title">We Make Touring Down Under Affordable</div>
+        <p class="diff-card-text">By sourcing world-class local talent and suppliers across every discipline, RAM dramatically reduces the cost of bringing large touring parties from overseas. No expensive international flights for tour managers, backing bands or security — we have the best already here.</p>
+      </div>
+    </div>
+
+    <div class="diff-card reveal reveal-d1" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/relationships.png');background-position:center 30%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.55)"></div>
+      <div class="diff-card-content" style="text-align:right;margin-left:auto">
+        <div class="diff-card-title">Insider Knowledge &amp; Relationships</div>
+        <p class="diff-card-text">Our deep-rooted relationships with local suppliers, venues, hotels and media give our clients preferential rates and access that simply aren't available to outsiders. We leverage decades of on-the-ground experience to your advantage.</p>
+      </div>
+    </div>
+
+    <div class="diff-card reveal reveal-d2" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/behind%20the%20scenes.png');background-position:center 20%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.52)"></div>
+      <div class="diff-card-content">
+        <div class="diff-card-title">A Team That's Done It at the Highest Level</div>
+        <p class="diff-card-text">Every member of the RAM team has worked in the music and entertainment industry at a high level in their respective field. We've been on the road, we know the pressure, and we know exactly what's needed — before you even ask.</p>
+      </div>
+    </div>
+
+    <div class="diff-card reveal reveal-d3" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/private.png');background-position:center 40%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.42)"></div>
+      <div class="diff-card-content" style="text-align:right;margin-left:auto">
+        <div class="diff-card-title">Privacy &amp; Confidentiality</div>
+        <p class="diff-card-text">Having worked with some of the biggest names in music and entertainment, RAM understands that discretion is non-negotiable. Our entire team operates under strict confidentiality — your privacy and your artist's privacy is always protected.</p>
+      </div>
+    </div>
+
+    <div class="diff-card reveal" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/press.png');background-position:center 30%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.55)"></div>
+      <div class="diff-card-content">
+        <div class="diff-card-title">Media Access &amp; Exposure</div>
+        <p class="diff-card-text">RAM Music Services' exclusive relationships with Australian &amp; New Zealand radio, TV, press and social media networks provide unrivalled promotional opportunities that amplify your tour and build lasting local profile.</p>
+      </div>
+    </div>
+
+    <div class="diff-card reveal reveal-d1" style="min-height:360px">
+      <div class="diff-card-bg" style="background-image:url('brand_assets/the%20voice.png');background-position:center 30%"></div>
+      <div class="diff-card-overlay" style="background:rgba(8,8,8,0.48)"></div>
+      <div class="diff-card-content" style="text-align:right;margin-left:auto">
+        <div class="diff-card-title">Broadcast &amp; TV Experience</div>
+        <p class="diff-card-text">RAM Music Services has extensive experience delivering artist services within Australia's biggest television productions. That broadcast-level standard of execution is applied to every tour we work on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+<!-- TRACK RECORD -->
+<section id="track" style="background:#fff">
+  <div class="section-label reveal" style="color:var(--gold-dk)">Our Track Record</div>
+  <h2 class="section-title reveal reveal-d1" style="color:#080808">Trusted by<br><em>World-Class Artists</em><br>and Global Teams</h2>
+  <p class="reveal reveal-d2" style="font-size:15px;line-height:1.85;color:rgba(8,8,8,0.78);max-width:760px;margin-bottom:16px">The RAM Music Services team brings together senior specialists who have individually delivered high-level services to some of the world's most recognised artists and public figures across music, film and entertainment.</p>
+  <p class="reveal reveal-d2" style="font-size:15px;line-height:1.85;color:rgba(8,8,8,0.78);max-width:760px;margin-bottom:16px">This depth of real-world, on-the-ground experience means every project benefits from people who have operated at the highest level, under real touring and production conditions.</p>
+  <p class="reveal reveal-d2" style="font-size:15px;line-height:1.85;color:rgba(8,8,8,0.78);max-width:760px;margin-bottom:48px">Our team members have supported artists and public figures from tour management, PR &amp; media bookings, artist liaison, VIP protection, security driving, and hair, makeup and styling, and include:</p>
+
+  <div class="artist-lists reveal reveal-d3">
+    <div class="artist-col">
+      <div class="artist-col-title">Music</div>
+      <ul class="artist-list">
+        <li>Anastacia</li><li>Billie Eilish</li><li>Bon Jovi</li><li>Celine Dion</li><li>Ed Sheeran</li>
+        <li>Jason Derulo</li><li>Justin Timberlake</li><li>Kanye West</li><li>Kelly Rowland</li>
+        <li>Kylie Minogue</li><li>Lady Gaga</li><li>Matchbox 20</li><li>Paul McCartney</li>
+        <li>Pearl Jam</li><li>Pink</li><li>Ricky Martin</li><li>Ronan Keating</li>
+        <li>Snow Patrol</li><li>The Corrs</li><li>Travis Scott</li><li>Westlife</li>
+      </ul>
+    </div>
+    <div class="artist-right-col">
+      <div class="artist-col">
+        <div class="artist-col-title">Film</div>
+        <ul class="artist-list">
+          <li>Arnold Schwarzenegger</li><li>Brad Pitt</li><li>Chris Hemsworth</li><li>Hugh Jackman</li>
+          <li>Jennifer Coolidge</li><li>Johnny Depp</li><li>Kate Bosworth</li>
+          <li>Matt Damon</li><li>Miranda Otto</li><li>Nicole Kidman</li>
+          <li>Pamela Anderson</li><li>Rebel Wilson</li><li>Tom Cruise</li>
+        </ul>
+      </div>
+      <div class="artist-col">
+        <div class="artist-col-title">VIPs</div>
+        <ul class="artist-list">
+          <li>Khloe Kardashian</li><li>Lance Armstrong</li><li>Prince of Brunei</li>
+          <li>Sir Bob Geldof</li><li>Sir Richard Branson</li><li>Usain Bolt</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-marquee-wrap reveal" style="margin-top:64px;border-top:1px solid rgba(8,8,8,0.08);padding-top:48px">
+    <div class="tv-shows reveal" style="margin-bottom:48px">
+      <p style="font-size:9.5px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(8,8,8,0.45);margin-bottom:20px">TV Productions &amp; Film</p>
+      <div style="overflow:hidden;width:100%">
+        <div style="display:flex;gap:52px;white-space:nowrap;animation:marquee-reverse 36s linear infinite;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Voice Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The X Factor Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">I'm A Celebrity… Get Me Out of Here!</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Love Island USA</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">My Kitchen Rules</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Chase</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Amazing Race</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Bachelorette</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Floor</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Wonka (Netflix)</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Pirates of the Caribbean 5</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <!-- duplicate for seamless loop -->
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Voice Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The X Factor Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">I'm A Celebrity… Get Me Out of Here!</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Love Island USA</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">My Kitchen Rules</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Chase</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Amazing Race</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Bachelorette</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Floor</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Wonka (Netflix)</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">Pirates of the Caribbean 5</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
+        </div>
+      </div>
+    </div>
+    <p class="reveal" style="font-size:9.5px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(8,8,8,0.45);margin-bottom:32px">Companies &amp; Labels</p>
+    <div class="logo-marquee-outer">
+      <div class="logo-marquee-track">
+        <div class="logo-marquee-item"><img src="brand_assets/Universal_Music_Group_logo.svg.png" alt="Universal Music Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Sony_Music_Entertainment_Logo_2023.svg.png" alt="Sony Music" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Warner_Music_Group_logo_(2021).svg.png" alt="Warner Music Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Live_Nation_Logo.svg.png" alt="Live Nation" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Netflix-Logo.png" alt="Netflix" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Disney+_2024.svg.png" alt="Disney+" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Paramount+_2017.svg" alt="Paramount+" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/mushroom-group-1296x729.webp" alt="Mushroom Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Nine_Network_logo_(2008).svg.png" alt="Nine Network" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Network_10_logo_2025.svg.png" alt="Network 10" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Seven_Network_logo.svg.png" alt="Seven Network" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/ITV1_logo_(2022).svg.png" alt="ITV" /></div>
+        <!-- duplicate for seamless loop -->
+        <div class="logo-marquee-item"><img src="brand_assets/Universal_Music_Group_logo.svg.png" alt="Universal Music Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Sony_Music_Entertainment_Logo_2023.svg.png" alt="Sony Music" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Warner_Music_Group_logo_(2021).svg.png" alt="Warner Music Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Live_Nation_Logo.svg.png" alt="Live Nation" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Netflix-Logo.png" alt="Netflix" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Disney+_2024.svg.png" alt="Disney+" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Paramount+_2017.svg" alt="Paramount+" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/mushroom-group-1296x729.webp" alt="Mushroom Group" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Nine_Network_logo_(2008).svg.png" alt="Nine Network" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Network_10_logo_2025.svg.png" alt="Network 10" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/Seven_Network_logo.svg.png" alt="Seven Network" /></div>
+        <div class="logo-marquee-item"><img src="brand_assets/ITV1_logo_(2022).svg.png" alt="ITV" /></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <div class="section-label reveal">What We Do</div>
+      <h2 class="section-title reveal reveal-d1">Complete <em>Artist</em><br>Services</h2>
+    </div>
+    <p class="reveal reveal-d2">Clients can engage RAM Music Services for a single specialised service or a fully integrated end-to-end solution, depending on the needs of the project. Every service delivered by vetted industry professionals with proven live tour experience.</p>
+  </div>
+  <div class="services-list">
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Artist Management</div>
+      <p class="service-item-desc">We work alongside artists as a long-term partner, helping shape direction, make smart business decisions and keep everything aligned. From deal negotiations to day-to-day coordination with agents, promoters, labels and publicists, we make sure nothing falls through the cracks.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Tour Management</div>
+      <p class="service-item-desc">We run the tour, end to end. Every date across Australia &amp; New Zealand is planned, advanced and executed with precision. We're the central point between artist, crew, promoters and venues, keeping everything moving and everyone on the same page.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">VIP Protection &amp; Tour Security</div>
+      <p class="service-item-desc">Calm, discreet protection from people who've done this at the highest level. Our team includes ex-law enforcement and experienced touring security, fully licensed across Australia &amp; New Zealand. We cover everything from close protection to venue security, with medical and safety training built in.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Security Driver Operations</div>
+      <p class="service-item-desc">Reliable, professional drivers who understand touring. Airport pickups, hotel runs, venue transfers, all handled smoothly and on time. A familiar, trusted presence from the moment your team lands.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Musicians &amp; Music Directors</div>
+      <p class="service-item-desc">Access to some of the best session musicians and music directors in Australia &amp; New Zealand. People who've played on major stages and can step straight into a tour environment.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Production</div>
+      <p class="service-item-desc">We bring together the right production setup for your show and your budget. Audio, lighting, staging, rigging, video and backline, all sourced locally to keep things efficient without cutting corners.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Press &amp; Promotion</div>
+      <p class="service-item-desc">We connect tours with the right media across Australia &amp; New Zealand. Radio, TV, press and digital, with scheduling and coordination handled so it fits seamlessly around the tour.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Hair &amp; Makeup</div>
+      <p class="service-item-desc">Artists who know what works on stage and on camera. They understand long days, quick turnarounds and how to keep everything looking consistent across a full tour.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Styling &amp; Wardrobe</div>
+      <p class="service-item-desc">Stylists who get touring. From sourcing and fittings through to show-day dressing and ongoing wardrobe management, everything is handled so the artist can just focus on performing.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Accommodation</div>
+      <p class="service-item-desc">We have strong relationships with hotels across Australia &amp; New Zealand, from boutique stays to full-scale tour bookings. We find the right fit for your team and your budget, without the usual friction.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Hospitality</div>
+      <p class="service-item-desc">Catering and backstage setup done properly. Rider requirements, green rooms, and day to day hospitality all handled with attention to detail so everything feels taken care of. We have exclusive partnerships with Australia &amp; New Zealand's most well-known and respected restaurants — whether it's a quick meal or a stand-up dining experience, we have you covered.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Air Travel</div>
+      <p class="service-item-desc">Touring in Australia &amp; New Zealand is a different beast. Distances are large, routes are limited and timing matters. We plan travel with that in mind, building schedules that are realistic and efficient across cities. Through our relationships with major airlines, we secure options that work for touring parties of any size, balancing cost, comfort and flexibility.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Working Rights &amp; Visas</div>
+      <p class="service-item-desc">We take care of visas and work permits so everything is compliant with our strict immigration laws. No stress, no last-minute issues, no guesswork.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Photography</div>
+      <p class="service-item-desc">Photographers who know how to capture a tour properly. Live shows, backstage moments and press imagery, all delivered to a professional standard.</p>
+    </div>
+
+    <div class="service-item reveal">
+      <div class="service-item-name">Local Experiences</div>
+      <p class="service-item-desc">If there's something worth doing while you're here, we know about it. From low-key local spots to wildlife encounters, from scenic charters to the Bridge Climb and other unique cultural experiences — we have exclusive partnerships with some of the most iconic and unforgettable experiences that makes touring down under so special.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+  <div style="max-width:740px;margin:0 auto">
+  <div class="section-label reveal">How It Works</div>
+  <h2 class="section-title reveal reveal-d1">Simple Process,<br><em>Exceptional</em> Execution</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="process-num">01</div>
+      <div class="process-content">
+        <div class="process-title">Initial Brief</div>
+        <p class="process-desc">Contact us via <a href="tel:+61407484368" style="color:var(--gold);text-decoration:none">+61 407 484 368</a> or <a href="mailto:alan@rammusicservices.com" style="color:var(--gold);text-decoration:none">alan@rammusicservices.com</a>. Tell us your dates, cities, and general requirements. One of our executive team will respond promptly to discuss further.</p>
+      </div>
+    </div>
+    <div class="process-step reveal reveal-d1">
+      <div class="process-num">02</div>
+      <div class="process-content">
+        <div class="process-title">Custom Proposal</div>
+        <p class="process-desc">We build a tailored service plan with full pricing and logistics mapped to suit your tour budget and requirements. You can engage RAM Music Services for a single specialised service or a fully integrated end-to-end solution, depending on the needs of the project.</p>
+      </div>
+    </div>
+    <div class="process-step reveal reveal-d2">
+      <div class="process-num">03</div>
+      <div class="process-content">
+        <div class="process-title">Meet the Team</div>
+        <p class="process-desc">We'll connect via Zoom for you to meet key RAM Music Services personnel — tour manager, security, music director, HMU, stylist, travel &amp; logistics — depending on your requirements.</p>
+      </div>
+    </div>
+    <div class="process-step reveal reveal-d3">
+      <div class="process-num">04</div>
+      <div class="process-content">
+        <div class="process-title">Commitment &amp; Project Management</div>
+        <p class="process-desc">We agree on all inclusions and commence working on your Australia &amp; New Zealand tour. We provide regular progress reports and updates every step of the way.</p>
+      </div>
+    </div>
+    <div class="process-step reveal reveal-d4">
+      <div class="process-num">05</div>
+      <div class="process-content">
+        <div class="process-title">On-Tour Execution</div>
+        <p class="process-desc">Your RAM Music Services team is on the ground, on call, focused on one thing: making your Australia &amp; New Zealand tour exceptional.</p>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:56px">
+    <a href="#contact" class="btn-gold">Contact Us Now</a>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-label reveal">Our People</div>
+  <h2 class="section-title reveal reveal-d1">Meet <em>The Team</em></h2>
+  <p class="intro reveal reveal-d2">Every RAM Music Services team member has worked at the highest level of the music and entertainment industry in their respective field.</p>
+  <div class="team-grid" style="margin-top:52px">
+
+    <!-- ROW 1: Alan Kearns centred -->
+    <div class="team-card team-card-featured reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/ALAN KEARNS.png" alt="Alan Kearns" style="object-position:center 20%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Alan Kearns</div>
+            <div class="team-role">Founder &amp; Head of Management</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Founder of RAM Music Services, Alan is a highly experienced artist and tour management professional with over 30 years across live entertainment, touring and commercial operations. His career spans every level of the industry, from early artist development through to global touring, working with artists such as <em>Snow Patrol</em>, <em>Westlife</em>, <em>Anastacia</em> and <em>Ronan Keating</em>, and across major productions including <em>The Voice Australia</em> and <em>X Factor Australia</em>.</p>
+        <p>With a deep, long-standing network across artists, agents, promoters, production and media, Alan instinctively knows who to call, how to structure a team, and how to align the right talent around a project. He doesn't just assemble teams, he curates them, drawing on trusted relationships built over decades to ensure every role is filled by people who can deliver at the highest level.</p>
+        <p>Alan leads the end-to-end delivery of tours, overseeing logistics, budgets, production, stakeholder coordination and on-the-ground execution. He is known for his solutions-focused approach and his ability to anticipate and resolve issues early, ensuring tours run smoothly under pressure. He also has a sharp commercial instinct, consistently identifying marketing and promotional opportunities that elevate a tour beyond the stage, increasing visibility, reach and impact.</p>
+        <p>Alan builds genuine relationships at every level, from senior executives through to crew and runners, creating an environment where everyone feels respected, included and valued. That trust and rapport carry through every project, strengthening both the team and the outcome.</p>
+        <p>With a rare combination of industry insight, relationships and hands-on execution, Alan brings a level of cohesion, access and strategic thinking that underpins every RAM Music Services project.</p>
+      </div>
+    </div>
+
+    <!-- ROW 2: Patrick + Scott Jervis -->
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/PATRICK PRENDERGAST.JPG" alt="Patrick Prendergast" style="object-position:center 12%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Patrick Prendergast</div>
+            <div class="team-role">Tour Management &amp; Artist Security</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Patrick works across both tour management and artist security, bringing a rare combination of operational oversight and on-the-ground protection experience. He has spent years on the road with international artists including <em>Bon Jovi</em>, <em>Tina Turner</em>, <em>Pink</em>, <em>Black Sabbath</em>, <em>Ozzy Osbourne</em>, <em>Janet Jackson</em>, <em>Chris Brown</em> and <em>KISS</em>, managing both logistics and security across global touring environments.</p>
+        <p>His background spans advancing shows, coordinating complex travel and production logistics, managing artist movements and delivering discreet security in high-pressure settings. He has also led the development and execution of security strategies for major Australian festivals including <em>Big Day Out</em>, <em>Future Music Festival</em>, <em>Stereo Sonic</em>, <em>Summa Daze</em> and <em>Pandemonium Rocks</em>. His ability to operate across both large-scale public events and tightly controlled private environments reflects a deep understanding of risk, coordination and execution.</p>
+        <p>Patrick is widely respected by international agents, touring personnel and artist management for his professionalism, reliability and ability to deliver under pressure, making him a trusted presence across both touring and event environments.</p>
+      </div>
+    </div>
+
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/scott jervis.png" alt="Scott Jervis" style="object-position:center top" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Scott Jervis</div>
+            <div class="team-role">VIP Protection &amp; Security</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Scott is a senior protection specialist and founder of Exclusive Protection Services, with extensive experience delivering high-level security solutions for artists, VIPs and major productions. His work spans close protection, risk management and the coordination of security operations across live events, film and broadcast environments.</p>
+        <p>He has operated across high-profile productions including <em>I'm A Celebrity… Get Me Out of Here</em>, <em>Love Island USA</em> and <em>Pirates of the Caribbean 5</em>, working alongside international crews, studios and executive production teams such as <em>ITV Studios</em> and <em>Bruckheimer Productions</em>. His experience also includes managing large-scale public environments, coordinating crowd control, police liaison and multi-agency responses in complex settings.</p>
+        <p>Scott has worked with international artists including <em>Billie Eilish</em>, <em>Pearl Jam</em>, <em>Travis Scott</em>, <em>Pink</em>, <em>Ja Rule</em> and <em>Rob Thomas</em>, and has provided close protection for high-profile individuals such as <em>Arnold Schwarzenegger</em> and <em>Usain Bolt</em>, as well as members of international royalty.</p>
+        <p>Known for his measured and professional approach, Scott builds security environments that are thorough without being intrusive. His ability to integrate seamlessly into touring and production settings allows clients to operate with confidence, knowing every detail is managed.</p>
+      </div>
+    </div>
+
+    <!-- ROW 3: Clare + Michael -->
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/clare kearns.png" alt="Clare Kearns" style="object-position:center 15%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Clare Kearns</div>
+            <div class="team-role">Travel &amp; Logistics</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Clare sits at the centre of RAM Music Services, managing the logistics and operational detail that keeps everything running smoothly behind the scenes. With over 20 years' experience across global investment banking and business operations, she brings a combination of structure, adaptability and real-world execution.</p>
+        <p>Her background includes coordinating complex international travel, multi-city schedules and high-stakes events, including global roadshows and large-scale conferences involving hundreds of stakeholders and tightly managed timelines.</p>
+        <p>Clare combines corporate-level operational discipline with a strong entrepreneurial mindset and creative problem-solving approach. She anticipates needs before they arise and creates clarity across moving parts, ensuring travel, logistics and day-to-day operations are delivered with precision, flow and consistency.</p>
+        <p>Detail-focused, highly organised and quietly relentless in delivery, Clare creates the structure that allows tours and teams to run seamlessly.</p>
+      </div>
+    </div>
+
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/mick mccann.png" alt="Michael McCann" style="object-position:center 15%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Michael McCann</div>
+            <div class="team-role">Security Driver Operations</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Michael brings over 20 years' experience delivering discreet, high-trust transport and security support across touring, live events and private clients. He has worked with international artists, actors and athletes including <em>Ronan Keating</em>, <em>Pink</em>, <em>Celine Dion</em>, <em>Paul McCartney</em>, <em>Chris Hemsworth</em>, <em>Tom Cruise</em>, <em>Brad Pitt</em>, <em>Usain Bolt</em> and <em>The Kid Laroi</em>, often supporting clients across extended schedules and multi-city movements.</p>
+        <p>His background combines advanced driving capability with strong situational awareness, allowing him to operate confidently in fast-moving, high-pressure settings. From airport transfers through to complex daily movements, he ensures every journey is smooth, secure and precisely executed.</p>
+        <p>Known for his discretion and reliability, Michael integrates seamlessly into touring parties and wider teams, providing consistent, professional support at every stage.</p>
+      </div>
+    </div>
+
+    <!-- ROW 4: Lisa + Pip -->
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/lisa soames.JPG" alt="Lisa Soames" style="object-position:center 12%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Lisa Soames</div>
+            <div class="team-role">Hair &amp; Makeup</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Lisa is one of Australia's most experienced and trusted hair and makeup artists, with over 30 years working across television, touring, publicity and live production. Her career includes work with international artists and public figures such as <em>Ronan Keating</em>, <em>Anastacia</em>, <em>Kylie Minogue</em>, <em>Chris Hemsworth</em> and <em>Pamela Anderson</em>, as well as major productions including <em>The Voice</em>, <em>My Kitchen Rules</em> and <em>The Chase</em>.</p>
+        <p>She regularly operates as Head of Department, leading teams, managing budgets and delivering consistent, high-level results across fast-paced environments. From live television to backstage tour settings, Lisa understands the demands of performance, camera and long production days.</p>
+        <p>Known for her professionalism, discretion and ability to adapt quickly, Lisa ensures talent is consistently prepared, polished and camera-ready.</p>
+      </div>
+    </div>
+
+    <div class="team-card reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar">PC</div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Pip Cook</div>
+            <div class="team-role">Wardrobe &amp; Styling</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Pip is a highly experienced stylist with over 22 years working across television, film, live production and touring. Her work includes major productions such as <em>The Voice</em>, <em>The Amazing Race</em>, <em>The Bachelorette</em>, <em>The Floor</em> and <em>Wonka</em>, alongside styling high-profile talent across broadcast and live performance.</p>
+        <p>She leads wardrobe across fast-paced environments, managing everything from creative direction and fittings through to show-day execution. Her background gives her a strong understanding of both on-camera requirements and the realities of working on the road.</p>
+        <p>Organised, collaborative and detail-driven, Pip ensures consistency across every appearance, allowing talent to feel confident, prepared and focused.</p>
+      </div>
+    </div>
+
+    <!-- ROW 5: Scott Alpin centred -->
+    <div class="team-card team-card-featured reveal" onclick="this.classList.toggle('expanded')">
+      <div class="team-card-top">
+        <div class="team-avatar"><img src="brand_assets/SCOTT%20ALPIN.JPG" alt="Scott Alpin" style="object-position:center 8%" /></div>
+        <div class="team-card-header">
+          <div class="team-card-meta">
+            <div class="team-name">Scott Alpin</div>
+            <div class="team-role">Music Director &amp; Production</div>
+          </div>
+          <div class="team-expand-icon">+</div>
+        </div>
+      </div>
+      <div class="team-bio">
+        <p>Scott is one of Australia's most respected music directors, with credits spanning international arena tours, television broadcasts and live events. He connects touring artists with elite local musicians who are tour-ready from day one.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background:#fff;padding:112px 0">
+  <div style="padding:0 52px;margin-bottom:52px">
+    <div class="section-label reveal" style="color:var(--gold-dk)">Testimonials</div>
+    <h2 class="section-title reveal reveal-d1" style="color:#080808">In Their <em>Words</em></h2>
+  </div>
+  <div class="testi-carousel-wrap">
+    <div class="testi-carousel-track" id="testi-track">
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"RAM Music Services made my tour to Australia truly memorable and flawlessly executed. Alan and his team went above and beyond to ensure every detail was taken care of both on and off the stage. From exceptional hospitality to unforgettable experiences like taking us on the Sydney Harbour Bridge climb and access to some of Australia's finest restaurants, everything was handled with care and professionalism. I look forward to working with RAM Music Services again."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AN</div>
+          <div>
+            <div class="testi-name">Anastacia</div>
+            <div class="testi-role">International Artist</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Scott, both Jim and I are proud of what you have accomplished. Outstanding work. Thank you."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SF</div>
+          <div>
+            <div class="testi-name">Scott Farquar</div>
+            <div class="testi-role">The Walt Disney Company, Senior Manager</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Having Scott Jervis as the Security Coordinator on this film was amazing. Three days on location at Raby Bay with over 5000 fans coming from nowhere, Scott arranged barriers, Police and extra security without breaking a sweat. Everything was handled professionally and both the crowd and Johnny got to enjoy the meet and greet experience safely because of Scott's efforts."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JJ</div>
+          <div>
+            <div class="testi-name">Jerry Judge</div>
+            <div class="testi-role">Johnny Depp Security</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Scott, thanks for all of your professionalism on Pirates 5."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JB</div>
+          <div>
+            <div class="testi-name">Jerry Bruckheimer</div>
+            <div class="testi-role">Bruckheimer Productions</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Working with RAM Music Services is so effortless. Alan and his team bring a level of expert experience and industry knowledge that is truly invaluable. From the moment we engaged RMS they led the tour with confidence, delivering a high end, seamless service across all areas including communication, tour management, security and styling. We highly recommend RAM Music Services for any touring artist or team."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AH</div>
+          <div>
+            <div class="testi-name">Arwen Hunt</div>
+            <div class="testi-role">Melanie C Management</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"On behalf of the Royal Agricultural Society of the Commonwealth and The Duke of Edinburgh's Commonwealth Study Conferences, I wanted to personally thank you for your professional assistance and driving skill during the visit of Her Royal Highness, The Princess Royal, to Brisbane."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">CH</div>
+          <div>
+            <div class="testi-name">Chris Hartley</div>
+            <div class="testi-role">FAIM FAICD FRSA</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Wow. Another fantastic win. Well done team. Not only was the show a ratings triumph. But now your peers have recognised the production excellence you delivered day in day out throughout the series. It is no mean feat after many years of enjoyment for the British audience that you still continue to make us laugh and entertain us. Hope you celebrated in style. Thank you from the bottom of my heart."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AJ</div>
+          <div>
+            <div class="testi-name">Angela Jain</div>
+            <div class="testi-role">Managing Director, ITV Studios</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"There are few Security Operators that possess the real practical and theoretical knowledge combined with experience to provide World Class High Risk Personal Protection and even fewer that provide it with the level of integrity, competence and dedication to clients needs as Scott Jervis."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">HV</div>
+          <div>
+            <div class="testi-name">Hans Van Beuge</div>
+            <div class="testi-role">World Renowned Protection Specialist</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"To say we've pulled off something incredible would be an understatement. This is ITV's biggest format on the biggest broadcast network in the U.S. You've navigated everything from time zones to monsoons and are making something incredible. Most shows have the luxury of shooting and posting over a long period of time but no, not Love Island. Every day you listen, react and create. The results speak for themselves and the fan base is hooked!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">DG</div>
+          <div>
+            <div class="testi-name">David George</div>
+            <div class="testi-role">CEO, ITV America</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-bg">&ldquo;</div>
+        <p class="testi-text">"Love Island has been picked up for a second season with CBS! This is obviously really exciting news and this would not have been possible without you! Thank you so much for all your hard work, energy, talent and commitment to the show. We never take for granted how hard you work to make Love Island the success it is. Thanks again and congratulations!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">BMS</div>
+          <div>
+            <div class="testi-name">Ben, Mandy &amp; Simon</div>
+            <div class="testi-role">Executive Producers, Love Island USA</div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+  <div style="padding:0 52px;margin-top:32px;display:flex;align-items:center;gap:16px">
+    <button class="gallery-btn" id="testi-prev" aria-label="Previous">←</button>
+    <button class="gallery-btn" id="testi-next" aria-label="Next">→</button>
+    <span style="font-size:10px;letter-spacing:0.2em;color:rgba(8,8,8,0.45);margin-left:8px" id="testi-counter">01 / 10</span>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label reveal">Common Questions</div>
+  <h2 class="section-title reveal reveal-d1">Frequently Asked <em>Questions</em></h2>
+  <div class="faq-list reveal reveal-d2">
+
+    <div class="faq-item">
+      <div class="faq-q">How far in advance should we contact RAM Music Services?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">The earlier the better — ideally 3–6 months before your tour dates. That said, we've successfully delivered tours with as little as 2–3 weeks notice. Don't hesitate to reach out regardless of your timeline.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do you only work with major artists?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Not at all. RAM Music Services works with artists at all levels of their career. We tailor our service packages to suit your budget — from emerging artists on their first Australia &amp; New Zealand tour to global superstars on arena runs.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can you arrange just one or two services, or is everything a package?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">You can engage RAM for a single service or the full suite — it's entirely up to you. Many clients start with just security or transport and expand to other services once they experience the quality of our team.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do you handle artist privacy and confidentiality?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Confidentiality is paramount at RAM. Every team member signs strict non-disclosure agreements. We never discuss, confirm, or publicise client engagements without explicit written permission.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can you arrange working visas for international artists and crew?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Yes. RAM Music Services manages all visa and working rights arrangements for artists and touring crew entering Australia &amp; New Zealand, ensuring full compliance with local immigration laws.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What cities in Australia &amp; New Zealand do you cover?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">We service all major cities and regions across Australia — Sydney, Melbourne, Brisbane, Perth, Adelaide, Gold Coast, Canberra and beyond — as well as Auckland, Wellington, and Christchurch in New Zealand.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How does RAM save us money compared to bringing our own team from overseas?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">By sourcing elite, tour-experienced local professionals across every discipline, RAM eliminates the significant cost of international flights, accommodation and per diems for large overseas touring parties. Our local supplier relationships also secure preferential rates across hotels, transport and hospitality that aren't available to touring teams arriving from overseas.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do you provide services for TV productions and events, not just tours?<span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Yes. RAM Music Services has extensive experience delivering artist services within major Australian television productions and live events. Our team is equally at home in a broadcast environment as they are on a touring schedule.</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="background:#fff;padding:112px 0 112px;">
+  <div style="padding:0 52px;margin-bottom:48px">
+    <div class="section-label reveal" style="color:var(--gold-dk)">Our Gallery</div>
+    <h2 class="section-title reveal reveal-d1" style="color:#080808">Behind The <em>Scenes</em></h2>
+  </div>
+  <div class="gallery-track-wrap">
+    <div class="gallery-track">
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns anastacia.PNG" alt="Alan Kearns and Anastacia" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann brad pitt.jpg" alt="Michael McCann and Brad Pitt" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts scott the voice.png" alt="The Voice" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns ronan keating 1.png" alt="Alan Kearns and Ronan Keating" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann celine dion.jpg" alt="Michael McCann and Celine Dion" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts scott love island.png" alt="Love Island" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns anastacia bridge2.JPG" alt="Alan Kearns and Anastacia" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann chris hemsworth.jpg" alt="Michael McCann and Chris Hemsworth" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts scott tour life.png" alt="Tour Life" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns the voice judges.jpg" alt="Alan Kearns - The Voice" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann tom cruise .jpg" alt="Michael McCann and Tom Cruise" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts scott alpin mrsfranks2.PNG" alt="Scott Alpin" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns lisa soames the voice.JPG" alt="Alan Kearns and Lisa Soames - The Voice" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann drew barrymore.jpg" alt="Michael McCann and Drew Barrymore" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns picture this.JPG" alt="Alan Kearns - Picture This" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann heidi klum.jpg" alt="Michael McCann and Heidi Klum" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns ronan keating 2.jpg" alt="Alan Kearns and Ronan Keating" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts mick mccann usain bolt.jpg" alt="Michael McCann and Usain Bolt" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns ronan keating 3.jpg" alt="Alan Kearns and Ronan Keating" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts anastacia bridge.JPG" alt="Anastacia - Bridge Climb" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts alan kearns ronan keating.PNG" alt="Alan Kearns and Ronan Keating" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts lisa soames anastacia.PNG" alt="Lisa Soames and Anastacia" /></div>
+      <div class="gallery-item"><img src="brand_assets/bts rams/bts ronan keating ben and zara.JPG" alt="Ronan Keating" /></div>
+    </div>
+  </div>
+  <div class="gallery-nav reveal" style="padding:0 52px;margin-top:32px;display:flex;align-items:center;gap:16px">
+    <button class="gallery-btn" id="gallery-prev" aria-label="Previous">←</button>
+    <button class="gallery-btn" id="gallery-next" aria-label="Next">→</button>
+    <span class="gallery-counter" id="gallery-counter" style="font-size:10px;letter-spacing:0.2em;color:rgba(8,8,8,0.45);margin-left:8px">01 / 23</span>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <div class="section-label reveal">Get In Touch</div>
+      <h2 class="section-title reveal reveal-d1">Let's Make Your<br><em>Tour</em> Happen</h2>
+      <p class="reveal reveal-d2">Planning an Australia &amp; New Zealand tour? Contact RAM Music Services today for a tailored solution that ensures your tour is flawlessly delivered.</p>
+      <div class="contact-detail reveal reveal-d2">
+        <div class="contact-icon" style="font-size:12px;letter-spacing:0.05em;font-family:'Bebas Neue',sans-serif">AU</div>
+        <div class="contact-text">
+          <strong>Based In</strong>
+          <span>Sydney, Australia — Servicing AU &amp; NZ</span>
+        </div>
+      </div>
+      <div class="contact-detail reveal reveal-d3">
+        <div class="contact-icon" style="font-size:12px;letter-spacing:0.05em;font-family:'Bebas Neue',sans-serif">@</div>
+        <div class="contact-text">
+          <strong>Email</strong>
+          <span><a href="mailto:alan@rammusicservices.com" style="color:inherit;text-decoration:none;transition:color 0.25s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='inherit'">alan@rammusicservices.com</a></span>
+        </div>
+      </div>
+      <div class="contact-detail reveal reveal-d3">
+        <div class="contact-icon" style="font-size:12px;letter-spacing:0.05em;font-family:'Bebas Neue',sans-serif">TEL</div>
+        <div class="contact-text">
+          <strong>Phone</strong>
+          <span>+61 407 484 368</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form-wrap reveal reveal-d2" style="display:none">
+      <form class="contact-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@agency.com" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 000 000 0000" />
+          </div>
+          <div class="form-group">
+            <label for="service">Service Required</label>
+            <select id="service">
+              <option value="">Select a service…</option>
+              <option>Artist Management</option>
+              <option>Tour Management</option>
+              <option>Security</option>
+              <option>Chauffeur &amp; Transport</option>
+              <option>Musicians &amp; Music Directors</option>
+              <option>Production</option>
+              <option>Hair &amp; Makeup</option>
+              <option>Styling &amp; Wardrobe</option>
+              <option>Accommodation</option>
+              <option>Hospitality</option>
+              <option>Air Travel</option>
+              <option>Working Rights &amp; Visas</option>
+              <option>Press &amp; Promo</option>
+              <option>Photography</option>
+              <option>Local Experiences</option>
+              <option>Full Service Package</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dates">Tour Dates &amp; Cities</label>
+          <input type="text" id="dates" placeholder="e.g. March 2025 — Sydney, Melbourne, Auckland" />
+        </div>
+        <div class="form-group">
+          <label for="message">Additional Details</label>
+          <textarea id="message" placeholder="Tell us about your requirements, artist, and any specific needs…"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Enquiry</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo" style="cursor:none">
+    <img src="brand_assets/RAM logo landscape black.png" alt="RAM Music Services" style="filter:invert(1)" />
+  </a>
+  <p class="footer-copy">© 2025 RAM Music Services. All rights reserved.</p>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  /* HERO ENTRANCE */
+  document.querySelector('.hero').classList.add('hero-animate');
+
+  /* CURSOR */
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  document.addEventListener('mousemove', e => {
+    cur.style.left  = e.clientX + 'px';
+    cur.style.top   = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  });
+
+  /* NAV SCROLL */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  /* MOBILE MENU */
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.add('open');
+  });
+  document.getElementById('mobile-close').addEventListener('click', closeMobile);
+  function closeMobile() {
+    document.getElementById('mobile-menu').classList.remove('open');
+  }
+
+  /* REVEAL ON SCROLL */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  /* TESTIMONIALS CAROUSEL */
+  (function() {
+    const track = document.getElementById('testi-track');
+    if (!track) return;
+    const cards = track.querySelectorAll('.testi-card');
+    const counter = document.getElementById('testi-counter');
+    const total = cards.length;
+    let idx = 0;
+    function visible() { return window.innerWidth <= 960 ? 1 : 2; }
+    function move() {
+      const gap = window.innerWidth <= 960 ? 16 : 24;
+      const w = cards[0].offsetWidth + gap;
+      track.style.transform = `translateX(-${idx * w}px)`;
+      if (counter) counter.textContent = String(idx + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    }
+    document.getElementById('testi-prev').addEventListener('click', () => { idx = Math.max(0, idx - 1); move(); });
+    document.getElementById('testi-next').addEventListener('click', () => { idx = Math.min(total - visible(), idx + 1); move(); });
+    window.addEventListener('resize', () => { idx = 0; move(); });
+  })();
+
+  /* GALLERY */
+  (function() {
+    const track = document.querySelector('.gallery-track');
+    const items = document.querySelectorAll('.gallery-item');
+    const counter = document.getElementById('gallery-counter');
+    if (!track || !items.length) return;
+    const visible = 2;
+    const total = items.length;
+    let idx = 0;
+    function move() {
+      const itemW = items[0].offsetWidth + 20;
+      track.style.transform = `translateX(-${idx * itemW}px)`;
+      counter.textContent = String(idx + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    }
+    document.getElementById('gallery-prev').addEventListener('click', () => { idx = Math.max(0, idx - 1); move(); });
+    document.getElementById('gallery-next').addEventListener('click', () => { idx = Math.min(total - visible, idx + 1); move(); });
+  })();
+
+  /* FAQ ACCORDION */
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>

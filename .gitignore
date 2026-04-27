@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary screenshots (local dev only)
+temporary screenshots/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local server logs
+*.log
