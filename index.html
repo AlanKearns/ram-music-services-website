@@ -314,56 +314,24 @@
     }
 
     /* ── ABOUT ── */
-    #about { background: #fff; }
-    #about .section-label { color: var(--gold-dk); }
-    #about .section-label::before { background: var(--gold-dk); }
-    #about .section-title { color: #080808; }
+    #about { position: relative; overflow: hidden; background: var(--black); }
+    #about .section-label { color: var(--gold); }
+    #about .section-label::before { background: var(--gold); }
+    #about .section-title { color: var(--white); }
     #about .section-title em { color: var(--gold); }
-    .about-layout {
-      display: grid; grid-template-columns: 1fr 1.05fr;
-      gap: 96px; align-items: center;
-    }
-    .about-visual { position: relative; height: 540px; }
-    .about-main-box {
-      position: absolute; inset: 0 0 52px 0;
-      background: none;
-      border: none;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
-    .about-main-box::before { display: none; }
-    .about-logo-display {
+    .about-bg {
       position: absolute; inset: 0;
-      z-index: 1; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+      background: url('brand_assets/helicopter adjusted.png') center/cover no-repeat;
     }
-    .about-logo-display img { width: 100%; height: auto; display: block; opacity: 1; filter: none; }
-    .about-quote {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 24px 28px;
-      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 100%);
+    .about-overlay {
+      position: absolute; inset: 0;
+      background: rgba(8,8,8,0.68);
     }
-    .about-quote p {
-      font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: 16px; color: var(--gold-lt); line-height: 1.55;
+    .about-layout {
+      position: relative; z-index: 2;
+      max-width: 760px;
     }
-    .about-accent {
-      position: absolute; bottom: 0; right: -24px;
-      width: 156px; height: 78px;
-      background: var(--gold);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2px;
-    }
-    .about-accent .num {
-      font-family: 'Bebas Neue', sans-serif; font-size: 32px;
-      color: var(--black); line-height: 1;
-    }
-    .about-accent .lbl {
-      font-size: 8px; font-weight: 500;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: rgba(8,8,8,0.6);
-    }
-    .about-text p { font-size: 15px; line-height: 1.9; color: rgba(8,8,8,0.8); margin-bottom: 16px; }
+    .about-text p { font-size: 15px; line-height: 1.9; color: rgba(245,240,232,0.88); margin-bottom: 16px; }
     .about-stats {
       display: grid; grid-template-columns: 1fr;
       gap: 2px; margin-top: 44px; max-width: 280px;
@@ -800,8 +768,6 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
-      .about-layout { grid-template-columns: 1fr; gap: 48px; }
-      .about-visual { height: 300px; }
       .about-stats { grid-template-columns: repeat(3,1fr); }
     }
     @media (max-width: 960px) {
@@ -834,9 +800,6 @@
       /* Diff cards */
       .diff-card { min-height: 280px; }
       .different-grid { gap: 2px; }
-      /* About */
-      .about-layout { grid-template-columns: 1fr; gap: 48px; }
-      .about-visual { height: 280px; }
       /* Gallery */
       .gallery-item { height: 240px; }
     }
@@ -844,6 +807,8 @@
       /* Team — 1 per row on mobile */
       .team-grid { gap: 6px; }
       .team-card { width: 100%; }
+      .team-card-featured { align-items: stretch; }
+      .team-card-featured .team-card-top { width: 100%; }
       .team-avatar { width: 72px; height: 92px; }
       .team-card-top { gap: 14px; }
       .about-stats { grid-template-columns: 1fr 1fr; }
@@ -962,14 +927,9 @@
 
 <!-- ABOUT -->
 <section id="about">
+  <div class="about-bg"></div>
+  <div class="about-overlay"></div>
   <div class="about-layout">
-    <div class="about-visual reveal">
-      <div class="about-main-box">
-        <div class="about-logo-display">
-          <img src="brand_assets/helicopter.PNG" alt="RAM Music Services" loading="lazy" />
-        </div>
-      </div>
-    </div>
     <div class="about-text">
       <div class="section-label reveal">Who We Are</div>
       <h2 class="section-title reveal reveal-d1">Built for <em>Artist Managers, Agents &amp; Record Labels.</em><br><span style="font-size:0.5em;letter-spacing:0.04em">Delivered by Industry Insiders.</span></h2>
