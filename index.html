@@ -282,6 +282,8 @@
       display: flex; gap: 52px;
       animation: marquee 38s linear infinite;
       white-space: nowrap;
+      width: max-content;
+      will-change: transform;
     }
     .marquee-item {
       font-family: 'Bebas Neue', sans-serif;
@@ -691,11 +693,14 @@
     }
 
     /* ── LOGO MARQUEE ── */
+    .tv-marquee-track { width: max-content; will-change: transform; }
     .logo-marquee-outer { overflow: hidden; width: 100%; }
     .logo-marquee-track {
       display: flex; align-items: center; gap: 56px;
       animation: marquee 42s linear infinite;
       white-space: nowrap;
+      width: max-content;
+      will-change: transform;
     }
     .logo-marquee-item { flex-shrink: 0; }
     .logo-marquee-item img {
