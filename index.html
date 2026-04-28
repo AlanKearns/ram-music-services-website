@@ -773,6 +773,9 @@
       .about-stats { grid-template-columns: repeat(3,1fr); }
     }
     @media (max-width: 960px) {
+      .marquee-track { animation-duration: 24s; }
+      .tv-marquee-track { animation-duration: 22s; }
+      .logo-marquee-track { animation-duration: 28s; }
       nav { padding: 12px 20px; }
       .nav-links { display: none; }
       .nav-hamburger { display: block; }
@@ -806,6 +809,9 @@
       .gallery-item { height: 240px; }
     }
     @media (max-width: 600px) {
+      .marquee-track { animation-duration: 18s; }
+      .tv-marquee-track { animation-duration: 16s; }
+      .logo-marquee-track { animation-duration: 20s; }
       /* Team — 1 per row on mobile */
       .team-grid { gap: 6px; }
       .team-card { width: 100%; }
@@ -1049,7 +1055,7 @@
     <div class="tv-shows reveal" style="margin-bottom:48px">
       <p style="font-size:9.5px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(8,8,8,0.45);margin-bottom:20px">TV Productions &amp; Film</p>
       <div style="overflow:hidden;width:100%">
-        <div style="display:flex;gap:52px;white-space:nowrap;animation:marquee-reverse 36s linear infinite;">
+        <div class="tv-marquee-track" style="display:flex;gap:52px;white-space:nowrap;animation:marquee-reverse 36s linear infinite;">
           <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The Voice Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
           <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">The X Factor Australia</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
           <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.22em;color:rgba(8,8,8,0.65);flex-shrink:0">I'm A Celebrity… Get Me Out of Here!</span><span style="color:rgba(8,8,8,0.2);flex-shrink:0">✦</span>
